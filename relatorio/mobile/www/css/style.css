@@ -1,0 +1,10 @@
+/* Empty. Add your own CSS if you like */
+IMG.displayed {
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+}
+
+IMG.padding_0 {
+    padding: 0px 0px 0px 0px
+}
