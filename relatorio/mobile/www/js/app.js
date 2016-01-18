@@ -3,28 +3,24 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic'])
+angular.module('starter', ['ionic', 'ngCordovaOauth', 'starter.controllers'])
 
 .config(function($stateProvider, $urlRouterProvider) {
  
   $stateProvider
-  .state('welcome', {
-    url: '/',
-    templateUrl: 'parcials/welcome.html',
-    controller: 'WelcomeCtrl'
+  .state('home', {
+    url: '/home',
+    templateUrl: 'parcials/home.html',
+    controller: 'HomeCtrl'
   })
   .state('signin', {
     url: '/signin',
     templateUrl: 'parcials/signin.html',
     controller: 'SigninCtrl'
   })
-  .state('signup', {
-    url: '/signup',
-    templateUrl: 'parcials/signup.html',
-    controller: 'SignupCtrl'
-  });
+  ;
  
-  $urlRouterProvider.otherwise("/");
+  $urlRouterProvider.otherwise("/signin");
  
 })
 
