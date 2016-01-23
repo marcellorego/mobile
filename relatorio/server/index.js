@@ -1,9 +1,12 @@
+'use strict'
+
 // call the packages we need
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var path = require("path");
+var _ = require('lodash');
 
 //Load package.json
 var pjson = require(path.join(__dirname, '/package.json'));
@@ -33,16 +36,9 @@ var port = process.env.PORT || 8080;        // set our port
 // =============================================================================
 var router = express.Router();              // get an instance of the express Router
 
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
-router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' });   
-});
-
-// more routes for our API will happen here
-
 // REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
-app.use('/api', router);
+// all of our routes will be prefixed with /clipping
+app.use('/clipping', router);
 
 // CONNECT TO THE DATABASE
 var connectDB = require('./dbconfig');
@@ -52,6 +48,8 @@ var db = connectDB(app.locals.database, onDatabaseOpened, onDatabaseError);
 // =============================================================================
 function onDatabaseOpened() {
 
+    loadServices();
+
 	console.log('Listening on port ' + port);
 	app.listen(port);
 };
@@ -59,3 +57,18 @@ function onDatabaseOpened() {
 function onDatabaseError() {
     console.error.bind(console, 'connection error:')
 };
+
+function loadServices() {
+    console.log('Loading services...');
+    
+    // more routes for our API will happen here
+    app.model = require('./clipping/model/index');
+
+    //Load the routes
+    var routes = require('./clipping/route/index');
+    _.each(routes, function(config, route) {
+        config.controller(router, route, app.model[config.model]);
+    });
+    
+    console.log('Services loaded.');
+}
