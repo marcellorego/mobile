@@ -61,13 +61,10 @@ function onDatabaseError() {
 function loadServices() {
     console.log('Loading services...');
     
-    // more routes for our API will happen here
-    app.model = require('./clipping/model/index');
-
     //Load the routes
     var routes = require('./clipping/route/index');
     _.each(routes, function(config, route) {
-        config.controller(router, route, app.model[config.model]);
+        config.controller(router, route, config.model);
     });
     
     console.log('Services loaded.');

@@ -2,7 +2,7 @@
 
 module.exports = {
     '/users': {
-        model: "users",
+        model: require('../model/UserModel.js'),
         controller: require('../controller/UserController')
     }
 };
