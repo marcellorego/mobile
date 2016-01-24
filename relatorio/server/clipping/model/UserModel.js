@@ -5,7 +5,9 @@ var mongoose = require('mongoose');
 var UserSchema = new mongoose.Schema({
     email: {
         type: String,
-        required: true
+        required: true,
+        /*match: '/.+@.+\..+/',*/
+        lowercase: true
     },
     name: {
         type: String,
@@ -14,9 +16,13 @@ var UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    loggedInCount: {
+        type: Number,
+        default: 0
     }
 });
 
-var User = mongoose.model('user', UserSchema);
+var User = mongoose.model('User', UserSchema, 'users');
 
 module.exports = User;

@@ -1,23 +1,22 @@
-'use strict'
+'use strict';
 
+var util = rootRequire('util/index');
 
-var util = require('/util/index');
-
-var cryptoPwd = function(password) {
+var cryptoPwd = function (password) {
   
     var crypto = require('crypto');
-    crypto
+    var result = crypto
         .createHash('sha1')
         .update(password)
         .digest('base64');  
-    
+    return result;
 };
 
 var copyFunction = {
     'password' : cryptoPwd
 };
 
-module.exports = function(router, route, model) {
+module.exports = function (router, route, model) {
 
     var User = model;
 
@@ -41,17 +40,21 @@ module.exports = function(router, route, model) {
         var response = {};
         // fetch email and name from REST request.
         // Add strict validation when you use this in Production.
-        user.email = req.body.email;
+        
+        /*user.email = req.body.email;
         user.name = req.body.name;
         // Hash the password using SHA1 algorithm.
-        user.password = cryptoPwd(req.body.password);
+        user.password = cryptoPwd(req.body.password);*/
+        
+        util.copyBodyData(user, req.body, copyFunction);
+        
         user.save(function(err){
         // save() will run insert() command of MongoDB.
         // it will add new data in collection.
             if(err) {
                 response = {"error" : true,"message" : "Error adding data", "code":err};
             } else {
-                response = user;
+                response = {"name":user.name, "email":user.email};
             }
             res.json(response);
         });
@@ -83,7 +86,7 @@ module.exports = function(router, route, model) {
             } else {
             // we got data from Mongo.
             // change it accordingly.
-                if(req.body.name !== undefined) {
+                /*if(req.body.name !== undefined) {
                     // case where email needs to be updated.
                     data.name = req.body.name;
                 }
@@ -95,7 +98,10 @@ module.exports = function(router, route, model) {
                     // case where password needs to be updated
                     // Hash the password using SHA1 algorithm.
                     data.password = cryptoPwd(req.body.password);
-                }
+                }*/
+                
+                util.copyBodyData(data, req.body, copyFunction);
+                
                 // save the data
                 data.save(function(err){
                     if(err) {
