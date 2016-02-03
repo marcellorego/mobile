@@ -66,7 +66,7 @@ function loadServices() {
     console.log('Loading services...');
     
     //Load the routes
-    var routes = require('./clipping/route/index');
+    var routes = rootRequire('clipping/route/index');
     _.each(routes, function(config, route) {
         config.controller(router, route, config.model);
     });

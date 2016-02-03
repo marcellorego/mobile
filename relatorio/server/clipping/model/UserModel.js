@@ -2,7 +2,7 @@
 
 var mongoose = require('mongoose');
 
-var UserSchema = new mongoose.Schema({
+var userSchemaDefinition = {
     email: {
         type: String,
         required: true,
@@ -21,8 +21,10 @@ var UserSchema = new mongoose.Schema({
         type: Number,
         default: 0
     }
-});
+};
 
-var User = mongoose.model('User', UserSchema, 'users');
+var schema = new mongoose.Schema(userSchemaDefinition);
 
-module.exports = User;
+module.exports = schema;
+module.exports.model = mongoose.model('User', schema, 'users');
+module.exports.definition = userSchemaDefinition;

@@ -2,7 +2,7 @@
 
 module.exports = {
     '/users': {
-        model: require('../model/UserModel.js'),
-        controller: require('../controller/UserController')
+        model: rootRequire('clipping/model/UserModel.js'),
+        controller: rootRequire('clipping/controller/UserController')
     }
 };

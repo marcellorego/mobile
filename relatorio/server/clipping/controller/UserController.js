@@ -1,5 +1,6 @@
 'use strict';
 
+var status = require('http-status');
 var util = rootRequire('util/index');
 
 var cryptoPwd = function (password) {
@@ -16,15 +17,18 @@ var copyFunction = {
     'password' : cryptoPwd
 };
 
-module.exports = function (router, route, model) {
+module.exports = function (router, route, schema) {
 
-    var User = model;
-
+    var User = schema.model;
+    var projection = {"_id":true,"name":true,"email":true};
+    
     router.route(route)
     
-    .get(function(req,res){
-        var response = {};
-        User.find({}, function(err,data) {
+    .get(function(req,res) {
+     
+        User.find({}, projection, 
+            util.handleMany.bind(null, res)
+        /*function(err, data) {
         // Mongo command to fetch all data from collection.
             if(err) {
                 response = {"error" : true,"message" : "Error fetching data", "code":err};
@@ -32,7 +36,8 @@ module.exports = function (router, route, model) {
                 response = data;
             }
             res.json(response);
-        });
+        }*/
+        );
     })
     
     .post(function(req,res){
@@ -40,11 +45,6 @@ module.exports = function (router, route, model) {
         var response = {};
         // fetch email and name from REST request.
         // Add strict validation when you use this in Production.
-        
-        /*user.email = req.body.email;
-        user.name = req.body.name;
-        // Hash the password using SHA1 algorithm.
-        user.password = cryptoPwd(req.body.password);*/
         
         util.copyBodyData(user, req.body, copyFunction);
         
@@ -63,17 +63,11 @@ module.exports = function (router, route, model) {
     
     router.route(route + "/:id")
     
-    .get(function(req,res){
-        var response = {};
-        User.findById(req.params.id,function(err,data){
-        // This will run Mongo Query to fetch data based on ID.
-            if(err) {
-                response = {"error" : true,"message" : "Error fetching data", "code":err};
-            } else {
-                response = data;
-            }
-            res.json(response);
-        });
+    .get(function(req,res) {
+        
+        User.findById(req.params.id, projection,
+            util.handleOne.bind(null, res)
+        );
     })
     
     .put(function(req,res){
