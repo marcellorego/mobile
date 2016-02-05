@@ -1,12 +1,13 @@
 'use strict'
 
 var request = require('superagent');
+var ApiBuilder  = require('./APIBuilder');
 
 var URL_ROOT = 'https://www.googleapis.com/youtube/v3/';
 var KEY = 'AIzaSyCci79-Uk7M-hBXX8TFS8_y8e-8zpAiKlY';
 var MAX_RESULTS = 5;
 
-var SEARCH_API = 'search?part=snippet';
+/*var SEARCH_API = 'search?part=snippet';
 var CHANNEL_API = 'channels?part=snippet';
 
 var REGION = '&regionCode=BR';
@@ -16,7 +17,7 @@ var QUERY_PARAM = '&q=';
 var ID_PARAM = '&id=';
 var MAX_PARAM = '&maxResults=';
 var PAGE_PARAM = '&pageToken=';
-var CHANNELID_PARAM = '&channelId=';
+var CHANNELID_PARAM = '&channelId=';*/
 
 module.exports = {
     listChannels: listChannels,
@@ -26,10 +27,23 @@ module.exports = {
 
 function listChannels(q, page, callback) {
     
-    var url = URL_ROOT + SEARCH_API + REGION + CHANNELS_TYPE + QUERY_PARAM + q + KEY_PARAM + KEY + MAX_PARAM + MAX_RESULTS;
+    var builder  = new ApiBuilder();
+    builder
+        .host(URL_ROOT)
+        .action('search')
+        .part(['snippet','id'])
+        .region('BR')
+        .type('channel')
+        .query(q)
+        .maxResults(MAX_RESULTS)
+        .key(KEY)
+        ;
+    /*var url = URL_ROOT + SEARCH_API + REGION + CHANNELS_TYPE + QUERY_PARAM + q + KEY_PARAM + KEY + MAX_PARAM + MAX_RESULTS;*/
     if (page) {
-        url = url + PAGE_PARAM + page;    
+        builder.pageToken(page);    
     }
+
+    var url = builder.get();
 
     requestUrl(url, callback);
 };
