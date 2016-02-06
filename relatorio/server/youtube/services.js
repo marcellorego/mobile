@@ -42,26 +42,46 @@ function listChannels(q, page, callback) {
     if (page) {
         builder.pageToken(page);    
     }
-
     var url = builder.get();
-
     requestUrl(url, callback);
 };
 
 function channelById(id, callback) {
     
-    var url = URL_ROOT + CHANNEL_API + ID_PARAM + id + KEY_PARAM + KEY;
-   
+    var builder  = new ApiBuilder();
+    builder
+        .host(URL_ROOT)
+        .action('channels')
+        .part(['snippet','id'])
+        .region('BR')
+        .id(id)
+        .key(KEY)
+        ;
+    //var url = URL_ROOT + CHANNEL_API + ID_PARAM + id + KEY_PARAM + KEY;
+    var url = builder.get();
     requestUrl(url, callback);
 };
 
 function listChannelVideos(id, q, page, callback) {
     
-    var url = URL_ROOT + SEARCH_API + CHANNELID_PARAM + id + QUERY_PARAM + q + KEY_PARAM + KEY + MAX_PARAM + MAX_RESULTS;
+    var builder  = new ApiBuilder();
+    builder
+        .host(URL_ROOT)
+        .action('search')
+        .part(['snippet','id'])
+        .region('BR')
+        .channelId(id)
+        .query(q)
+        .maxResults(MAX_RESULTS)
+        .key(KEY)
+        ;
+
+    /*var url = URL_ROOT + SEARCH_API + CHANNELID_PARAM + id + QUERY_PARAM + q + KEY_PARAM + KEY + MAX_PARAM + MAX_RESULTS;
     if (page) {
         url = url + PAGE_PARAM + page;    
-    }
+    }*/
     
+    var url = builder.get();
     requestUrl(url, callback);
 };
 
