@@ -1,5 +1,7 @@
 'use strict'
 
+var SEARCH_ORDER = ['relevance', 'date', 'rating', 'title', 'videoCount', 'viewCount'];
+
 module.exports = function APIBuilder() {
     
     var self = this;
@@ -57,6 +59,13 @@ module.exports = function APIBuilder() {
     
     this.channelId = function(value) {
         return addParameter('channelId', value);
+    }
+    
+    this.order = function(value) {
+       if (SEARCH_ORDER.indexOf(value) < 0) {
+            value = SEARCH_ORDER[0];
+       }
+       return addParameter('order', value); 
     }
     
     this.get = function() {

@@ -20,110 +20,68 @@ var copyFunction = {
 module.exports = function (router, route, schema) {
 
     var User = schema.model;
-    var projection = {"_id":true,"name":true,"email":true};
+    var projection = {"_id":true,"name":true,"email":true,"loggedInCount":true};
     
     router.route(route)
     
     .get(function(req,res) {
-     
-        User.find({}, projection, 
+        var query = req.query || {};
+        User.find(query, projection, 
             util.handleMany.bind(null, res)
-        /*function(err, data) {
-        // Mongo command to fetch all data from collection.
-            if(err) {
-                response = {"error" : true,"message" : "Error fetching data", "code":err};
-            } else {
-                response = data;
-            }
-            res.json(response);
-        }*/
         );
     })
     
     .post(function(req,res){
         var user = new User();
-        var response = {};
-        // fetch email and name from REST request.
-        // Add strict validation when you use this in Production.
-        
         util.copyBodyData(user, req.body, copyFunction);
         
-        user.save(function(err){
-        // save() will run insert() command of MongoDB.
-        // it will add new data in collection.
-            if(err) {
-                response = {"error" : true,"message" : "Error adding data", "code":err};
-            } else {
-                response = {"name":user.name, "email":user.email};
+        user.save(function(error, data) {
+            if (!error) {
+                delete data.password;
             }
-            res.json(response);
+            util.handleOne(res, error, data);
         });
     });
-    
-    
+
     router.route(route + "/:id")
     
     .get(function(req,res) {
-        
         User.findById(req.params.id, projection,
             util.handleOne.bind(null, res)
         );
     })
     
     .put(function(req,res){
-        var response = {};
         // first find out record exists or not
         // if it does then update the record
-        User.findById(req.params.id,function(err,data){
-            if(err) {
-                response = {"error" : true,"message" : "Error fetching data", "code":err};
+        User.findById(req.params.id, function(error, data) {
+            if(error) {
+                util.handleError(res, error);
             } else {
-            // we got data from Mongo.
-            // change it accordingly.
-                /*if(req.body.name !== undefined) {
-                    // case where email needs to be updated.
-                    data.name = req.body.name;
-                }
-                if(req.body.email !== undefined) {
-                    // case where email needs to be updated.
-                    data.email = req.body.email;
-                }
-                if(req.body.password !== undefined) {
-                    // case where password needs to be updated
-                    // Hash the password using SHA1 algorithm.
-                    data.password = cryptoPwd(req.body.password);
-                }*/
-                
                 util.copyBodyData(data, req.body, copyFunction);
-                
                 // save the data
-                data.save(function(err){
-                    if(err) {
-                        response = {"error" : true,"message" : "Error updating data", "code":err};
-                    } else {
-                        response = data;
+                data.save(function(error, data) {
+                    if (!error) {
+                        delete data.password;
                     }
-                    res.json(response);
+                    util.handleOne(res, error, data);
                 })
             }
         });
     })
     
     .delete(function(req,res){
-        var response = {};
         // find the data
-        User.findById(req.params.id,function(err,data){
-            if(err) {
-                response = {"error" : true,"message" : "Error fetching data", "code":err};
+        User.findById(req.params.id, function(error, data) {
+            if(error) {
+                util.handleError(res, error);
             } else {
                 // data exists, remove it.
-                User.remove({_id : req.params.id},function(err){
-                    if(err) {
-                        response = {"error" : true,"message" : "Error deleting data", "code":err};
-                    } else {
-                        response = data;
+                User.remove({_id : req.params.id}, function(error) {
+                    if (!error) {
+                        data = {"_id" : req.params.id};
                     }
-                    res.json(response);
+                    util.handleOne(res, error, data);
                 });
             }
         });

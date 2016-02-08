@@ -1,11 +1,13 @@
 'use strict'
 
 var request = require('superagent');
-var ApiBuilder  = require('./APIBuilder');
+var ApiBuilder  = rootRequire('youtube/APIBuilder');
 
 var URL_ROOT = 'https://www.googleapis.com/youtube/v3/';
 var KEY = 'AIzaSyCci79-Uk7M-hBXX8TFS8_y8e-8zpAiKlY';
-var MAX_RESULTS = 5;
+var MAX_RESULTS = process.env.MAX_RESULTS || 5;
+var REGION = process.env.REGION || 'BR';
+
 
 /*var SEARCH_API = 'search?part=snippet';
 var CHANNEL_API = 'channels?part=snippet';
@@ -32,7 +34,7 @@ function listChannels(q, page, callback) {
         .host(URL_ROOT)
         .action('search')
         .part(['snippet','id'])
-        .region('BR')
+        .region(REGION)
         .type('channel')
         .query(q)
         .maxResults(MAX_RESULTS)
@@ -53,7 +55,7 @@ function channelById(id, callback) {
         .host(URL_ROOT)
         .action('channels')
         .part(['snippet','id'])
-        .region('BR')
+        .region(REGION)
         .id(id)
         .key(KEY)
         ;
@@ -69,7 +71,7 @@ function listChannelVideos(id, q, page, callback) {
         .host(URL_ROOT)
         .action('search')
         .part(['snippet','id'])
-        .region('BR')
+        .region(REGION)
         .channelId(id)
         .query(q)
         .maxResults(MAX_RESULTS)
@@ -96,6 +98,6 @@ function requestUrl(url, callback) {
         if (!err) {
             result = JSON.parse(res.text);
         }
-        callback(result);
+        callback(err, result);
     });
 };
