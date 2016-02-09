@@ -1,14 +1,29 @@
-<ion-view title="Sign out">
+<ion-view title="Home">
+  
   <ion-header-bar padding="true">
-      <h1 class="title">Sign out</h1>
+      <button class="button button-clear icon ion-navicon"></button>
+      <h1 class="title">Home</h1>
+      <a href="#/search" class="button button-clear icon ion-search"></a>
   </ion-header-bar>
+  
   <ion-content class="has-header padding">
       
-      <div ng-include="'parcials/logo.html'"></div>
- 
+      <!--div ng-include="'parcials/logo.html'"></div-->
+      <ion-searchbar></ion-searchbar>
+      <ion-list>
+        <ion-item ng-repeat="item in channels track by $index">
+            <p>{{item.name}}</p>
+        </ion-item>
+        <!--ion-infinite-scroll on-infinite="addItems()"></ion-infinite-scroll-->
+      </ion-list>
+      
+      <div ng-if="channels !== undefined && !channels.length" class="no-results">
+        <p>No Results</p>
+      </div>
+      
       <a href="#" ng-click="googleLogin()">Sign Out</a>
     
-      <div class="list">
+      <!--div class="list">
             <a class="item" href="#" onclick="window.open('http://www.nraboy.com/contact', '_system', 'location=yes'); return false;">
                 Open a Browser
             </a>
@@ -18,7 +33,7 @@
             <a class="item" href="#" onclick="window.open('https://plus.google.com/+NicRaboy', '_system', 'location=yes'); return false;">
                 Open a Google+ Client or Browser
             </a>
-        </div>
+        </div-->
       
   </ion-content>
 </ion-view>

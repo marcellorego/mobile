@@ -89,7 +89,7 @@ function listChannelVideos(id, q, page, callback) {
 
 function requestUrl(url, callback) {
     
-    console.log(url);
+    //console.log(url);
     
     request('GET', url)
     .set('Accept', 'application/json')

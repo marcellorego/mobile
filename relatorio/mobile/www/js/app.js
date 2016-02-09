@@ -18,6 +18,11 @@ angular.module('starter', ['ionic', 'ngCordovaOauth', 'starter.controllers'])
     templateUrl: 'parcials/signin.html',
     controller: 'SigninCtrl'
   })
+  .state('search', {
+    url: '/search',
+    templateUrl: 'parcials/searchChannel.html',
+    controller: 'SearchChannelCtrl'
+  })
   ;
  
   $urlRouterProvider.otherwise("/signin");

@@ -1,0 +1,57 @@
+<ion-view title="Search for new channels">
+  
+  <ion-header-bar padding="true">
+      <a href="#/home" class="button button-clear icon ion-chevron-left"></a>
+      <h1 class="title">Search for new channels</h1>
+  </ion-header-bar>
+  
+  <ion-header-bar class="bar-subheader">
+     <div class="bar bar-header item-input-inset">
+        <label class="item-input-wrapper">
+            <i class="icon ion-ios-search placeholder-icon"></i>
+            <input type="search" placeholder="Channel name" data-ng-model="searchInput">
+            <button data-ng-show="searchInput && searchInput.length" class="button button-clear ion-ios-close-empty"></button>
+        </label>
+        <button class="button button-clear">
+            Search
+        </button>
+      </div>
+  </ion-header-bar>
+  
+  <ion-content class="has-header padding">
+      
+      <div class="list card">
+
+  <div class="item item-avatar">
+    <img src="mcfly.jpg">
+    <h2>Marty McFly</h2>
+    <p>November 05, 1955</p>
+  </div>
+
+  <div class="item item-body">
+    <img class="full-image" src="delorean.jpg">
+    <p>
+      This is a "Facebook" styled Card. The header is created from a Thumbnail List item,
+      the content is from a card-body consisting of an image and paragraph text. The footer
+      consists of tabs, icons aligned left, within the card-footer.
+    </p>
+    <p>
+      <a href="#" class="subdued">1 Like</a>
+      <a href="#" class="subdued">5 Comments</a>
+    </p>
+  </div>
+
+</div>
+      
+      <!--ion-list>
+        <ion-item ng-repeat="channel in channels track by $index">
+            <p>{{channel.snippet.title}}</p>
+        </ion-item>
+      </ion-list>
+      
+      <div ng-if="channels !== undefined && !channels.length" class="no-results">
+        <p>No Results</p>
+      </div-->
+      
+  </ion-content>
+</ion-view>
