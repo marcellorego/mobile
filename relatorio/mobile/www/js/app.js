@@ -4,7 +4,9 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('starter', ['ionic', 'ngCordovaOauth', 'starter.controllers'])
-
+.constant("serviceConfig", {
+    "urlbase": "http://localhost:8080"
+})
 .config(function($stateProvider, $urlRouterProvider) {
  
   $stateProvider

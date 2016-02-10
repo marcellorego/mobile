@@ -11,7 +11,31 @@ pKa8--k974kjkz_ZBrlRDU5F*/
 
 angular.module('starter.services', [])
 
-.service('googleService', ['$http', '$rootScope', '$q', function ($http, $rootScope, $q) {
+.service('YoutubeService', ['$http', 'serviceConfig', function ($http, serviceConfig) {
+    
+    this.listChannels = function(name, pageToken) {
+        var config = {
+            method: 'GET',
+            url: serviceConfig.urlbase + '/clipping/listChannels',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            params: { 
+                name: name,
+                pageToken: pageToken
+            }
+        };
+        
+        var promise = $http(config)
+        .then(function (response) {
+            //console.log(response);
+            return response.data;
+        });
+        return promise;
+    };
+}]);
+
+/*.service('googleService', ['$http', '$rootScope', '$q', function ($http, $rootScope, $q) {
     
     var Google = {
         urlAuth: 'https://accounts.google.com/o/oauth2/auth',
@@ -111,6 +135,6 @@ angular.module('starter.services', [])
             hd: domain 
         }, this.handleAuthResult);
         return false;
-    };*/
+    };
 
-}]);
+}]);*/

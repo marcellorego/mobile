@@ -1,4 +1,4 @@
-angular.module('starter.controllers', ['ngCordova', 'ngCordovaOauth'])
+angular.module('starter.controllers', ['ngCordova', 'ngCordovaOauth', 'starter.services'])
 
 
 .controller('SigninCtrl', function($scope, $state) {
@@ -36,9 +36,19 @@ angular.module('starter.controllers', ['ngCordova', 'ngCordovaOauth'])
     }
 })
 
-.controller('SearchChannelCtrl', function($scope, $state) {
-
-  $scope.channels = [{
+.controller('SearchChannelCtrl', ['$scope', '$state', 'YoutubeService', function($scope, $state, YoutubeService) {
+    
+    var performSearch = function(searchInput, pageToken) {
+        
+        YoutubeService.listChannels(searchInput, pageToken)
+        .then(function(data) {
+            $scope.channels = data.items;
+            $scope.prevPageToken = data.prevPageToken;
+            $scope.nextPageToken = data.nextPageToken;
+        });
+    };
+     
+  /*$scope.channels = [{
         "kind": "youtube#searchResult",
         "etag": "DsOZ7qVJA4mxdTxZeNzis6uE6ck/wk1ocl7LFrM890YRyJv18RViDUE",
         "id": {
@@ -65,12 +75,30 @@ angular.module('starter.controllers', ['ngCordova', 'ngCordovaOauth'])
             "liveBroadcastContent": "none"
         }
     }
-  ];
+  ];*/
   
-  $scope.doSearch = function() {
+  
+    $scope.doClear = function() {
+        $scope.searchInput = '';
+        $scope.nextPageToken = undefined;
+        $scope.previousToken = undefined;
+    };
     
-  };
-  
-})
+    $scope.doSearch = function() {
+        var query = $scope.searchInput;
+        $scope.doClear();
+        performSearch(query);
+    };
 
+    $scope.doPreviousPage = function() {
+        performSearch($scope.searchInput, $scope.previousToken);
+    }
+    
+    $scope.doNextPage = function() {
+        performSearch($scope.searchInput, $scope.nextPageToken);
+    }
+
+    $scope.doClear();
+    $scope.channels = [];
+}])
 ;

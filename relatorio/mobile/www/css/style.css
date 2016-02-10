@@ -12,3 +12,7 @@ img.padding_tb_25 {
 has-error {
     border-color: red;
 }
+
+input.input-stretch {
+    width: 100%;
+}
