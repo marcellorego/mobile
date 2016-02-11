@@ -1,18 +1,12 @@
 /* Empty. Add your own CSS if you like */
-img.displayed {
-    display: block;
-    margin-left: auto;
-    margin-right: auto
-}
-
-img.padding_tb_25 {
-    padding: 25px 0px 25px 0px
-}
-
-has-error {
+.has-error {
     border-color: red;
 }
 
-input.input-stretch {
-    width: 100%;
+.row {
+    padding: 0px;
+}
+
+.col{
+    padding: 0px;
 }

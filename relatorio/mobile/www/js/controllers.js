@@ -96,7 +96,11 @@ angular.module('starter.controllers', ['ngCordova', 'ngCordovaOauth', 'starter.s
     
     $scope.doNextPage = function() {
         performSearch($scope.searchInput, $scope.nextPageToken);
-    }
+    };
+
+    $scope.toggleChannel = function(channelId, checked) {
+        console.log(channelId, checked);    
+    };
 
     $scope.doClear();
     $scope.channels = [];

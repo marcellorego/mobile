@@ -1,4 +1,4 @@
-<ion-view title="Search for new channels">
+<ion-view title="Search for new channels" cache-view="false">
   
   <ion-header-bar padding="true">
       <a href="#/home" class="button button-clear icon ion-chevron-left"></a>
@@ -16,7 +16,7 @@
                 class="button button-clear ion-ios-close-empty"
                 data-ng-activated="doClear()"></button>
         </label>
-        <button class="button button-clear" data-ng-click="doSearch()">Search</button>
+        <button class="button" data-ng-click="doSearch()">Search</button>
       </div>
       
   </ion-header-bar>
@@ -24,24 +24,44 @@
   <ion-content class="has-header padding">
       
       <div class="list card" ng-repeat="channel in channels track by $index">
+	    
+         <div class="item">
+            <div class="row">
+                <div class="col col-90">
+                    <div class="item-avatar">
+                	    <img ng-src="{{channel.snippet.thumbnails.default.url}}">
+                        <h2>{{channel.snippet.title}}</h2>
+                        <p>Publicado em : {{channel.snippet.publishedAt | date:'dd/MM/yyyy'}}</p>
+                    </div>
+                </div>
+                <div class="col">
 
-        <div class="item item-avatar">
-            <img ng-src="{{channel.snippet.thumbnails.default.url}}">
-            <a class="item-icon-right " href="#">
-                <i class="icon ion-star"></i>
-            </a>
-            <h2>{{channel.snippet.title}}</h2>
-            <p>Publicado em : {{channel.snippet.publishedAt | date:'dd/MM/yyyy'}}</p>
-            
-        </div>
-        
-        <div class="item item-body">
-            {{channel.snippet.description}}
-	    </div> 
-         
+                    <div class="item-toggle">
+                        <label class="toggle toggle-balance">
+                            <input type="checkbox"
+                                ng-model="checked" 
+                                ng-change="toggleChannel(channel.id.channelId, checked)">
+                            <div class="track">
+                                <div class="handle"></div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+             <div class="item-text-wrap">
+                <p>{{channel.snippet.description}}</p>
+            </div>
+         </div>
       </div>
+
+      <!--div ng-if="channels !== undefined && !channels.length" class="no-results">
+        <p>No Results</p>
+      </div-->
       
-      <div class="item" ng-if="channels && channels.length">
+  </ion-content>
+  
+  <!--ion-footer-bar ng-if="channels && channels.length">
+      <div class="item">
         <button class="item-icon-left button-clear" data-ng-click="doPreviousPage()">
             <i class="icon ion-arrow-left-b"></i>
         </button>
@@ -52,9 +72,5 @@
             <i class="icon ion-arrow-right-b"></i>
         </button>
       </div>
-      <!--div ng-if="channels !== undefined && !channels.length" class="no-results">
-        <p>No Results</p>
-      </div-->
-      
-  </ion-content>
+  </ion-footer-bar-->
 </ion-view>
