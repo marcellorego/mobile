@@ -6,11 +6,13 @@ global.rootRequire = function(name) {
 
 // call the packages we need
 var express    = require('express');        // call express
-var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var path = require("path");
 var _ = require('lodash');
+var wagner = require('wagner-core');
+
+var app = express();                 // define our app using express
 
 //Load package.json
 var pjson = require(path.join(__dirname, '/package.json'));
@@ -65,10 +67,35 @@ function onDatabaseError() {
 function loadServices() {
     console.log('Loading services...');
     
+    // middleware that is specific to this router
+    router.use(function timeLog(req, res, next) {
+        console.log('Start Time: ', Date.now());
+        next();
+    });
+    
+    var secutiry = rootRequire('clipping/controller/SecurityController');
+    
     //Load the routes
     var routes = rootRequire('clipping/route/index');
     _.each(routes, function(config, route) {
+        
+        /*if (config.model) {
+            wagner.factory(config.model.schemaName, function() {
+                return config.model;
+            });
+        }*/
+        
+        if (config.security) {
+            secutiry(router, route);
+        }
+        
         config.controller(router, route, config.model);
+    });
+    
+    // middleware that is specific to this router
+    router.use(function timeLog(req, res, next) {
+        console.log('End Time: ', Date.now());
+        next();
     });
     
     console.log('Services loaded.');

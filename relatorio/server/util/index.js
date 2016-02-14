@@ -26,7 +26,7 @@ function copyBodyData(model, body, copyFunctions) {
     }
 }
 
-function handleOne(res, error, result) {
+function handleOne(res, next, error, result) {
   if (error) {
     return handleError(res, error);  
       //{"code":11000,"index":0,"errmsg":"E11000 duplicate key error collection: clipping.users index: email_1 dup key: { : \"joe2@xxx.com\" }","op":{"password":"cRDtpNCeBiql5KOQsKVyrA0sAiA=","name":"Joe Ramone dsdffsd","email":"joe2@xxx.com","_id":"56b7bc50574516a2049ac4d3","loggedInCount":0,"__v":0}
@@ -39,14 +39,22 @@ function handleOne(res, error, result) {
   }
 
   res.json(result);
+  
+  if (next) {
+      next();
+  }
 }
 
-function handleMany(res, error, result) {
+function handleMany(res, next, error, result) {
   if (error) {
     return handleError(res, error);
   }
 
   res.json(result);
+  
+  if (next) {
+      next();
+  }
 }
 
 function handleError(res, error) {

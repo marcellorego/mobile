@@ -7,11 +7,11 @@ module.exports = function (router, route) {
     
     router.route(route)
     
-    .get(function(req, res) {
+    .get(function(req, res, next) {
         var channelName = req.query.name || '';
         var pageToken = req.query.pageToken;
         ApiService.listChannels(channelName, pageToken,
-            util.handleMany.bind(null, res)
+            util.handleMany.bind(null, res, next)
         );
     })
 };
