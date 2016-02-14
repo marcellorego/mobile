@@ -2,7 +2,7 @@
 
 var mongoose = require('mongoose');
 
-var userSchemaDefinition = {
+var definition = {
     email: {
         type: String,
         required: true,
@@ -23,8 +23,12 @@ var userSchemaDefinition = {
     }
 };
 
-var schema = new mongoose.Schema(userSchemaDefinition);
+var schemaName = 'User';
+var collectionName = 'users';
+var schema = new mongoose.Schema(definition);
 
-module.exports = schema;
-module.exports.model = mongoose.model('User', schema, 'users');
-module.exports.definition = userSchemaDefinition;
+module.exports.schemaName = schemaName;
+module.exports.collectionName = collectionName;
+module.exports.definition = definition;
+module.exports.schema = schema;
+module.exports.model = mongoose.model(schemaName, schema, collectionName);

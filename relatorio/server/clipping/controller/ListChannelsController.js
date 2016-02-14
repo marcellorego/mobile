@@ -3,7 +3,7 @@
 var ApiService  = rootRequire('youtube/services');
 var util = rootRequire('util/index');
 
-module.exports = function (router, route) {
+module.exports = function (router, route, wagner) {
     
     router.route(route)
     

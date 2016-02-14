@@ -79,17 +79,17 @@ function loadServices() {
     var routes = rootRequire('clipping/route/index');
     _.each(routes, function(config, route) {
         
-        /*if (config.model) {
+        if (config.model) {
             wagner.factory(config.model.schemaName, function() {
                 return config.model;
             });
-        }*/
+        }
         
         if (config.security) {
             secutiry(router, route);
         }
         
-        config.controller(router, route, config.model);
+        config.controller(router, route, wagner);
     });
     
     // middleware that is specific to this router
