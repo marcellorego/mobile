@@ -8,11 +8,16 @@ global.rootRequire = function(name) {
 var express    = require('express');        // call express
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
+var cookieSession = require('cookie-session');
 var path = require("path");
 var _ = require('lodash');
 var wagner = require('wagner-core');
+var mongoose = require('mongoose'); 
 
-var app = express();                 // define our app using express
+
+//var MemoryStore = express.session.MemoryStore;
+var app = express(); // define our app using express
+//var sessionStore = new MemoryStore({ reapInterval: 60000 * 10 });
 
 //Load package.json
 var pjson = require(path.join(__dirname, '/package.json'));
@@ -26,6 +31,21 @@ app.locals.version = pjson.version;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(methodOverride('X-HTTP-Method-Override'));
+
+var secret = (new Date()).getTime().toString();
+
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2']
+}));
+
+/*app.use(express.cookieParser(secret));
+app.use(express.session({
+    cookie: {maxAge: 1000*60*60},
+    store: sessionStore,
+    secret: secret, 
+    key: 'express.sid'}
+));*/
 
 // CORS Support
 app
@@ -56,6 +76,14 @@ function onDatabaseOpened() {
 
     loadServices();
 
+    // This endpoint reveals it
+    app.get("/session", function(req, res, next){
+        sessionStore.get(req.sessionID, function(err, data) {
+            res.send({err: err, data:data});
+            next();
+        });
+    });
+
 	console.log('Listening on port ' + port);
 	app.listen(port);
 };
@@ -66,6 +94,11 @@ function onDatabaseError() {
 
 function loadServices() {
     console.log('Loading services...');
+    
+    var ObjectId = mongoose.Types.ObjectId; 
+    wagner.factory('ObjectId', function() {
+        return ObjectId;
+    });
     
     // middleware that is specific to this router
     router.use(function timeLog(req, res, next) {
