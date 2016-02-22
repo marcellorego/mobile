@@ -28,7 +28,26 @@ angular.module('starter.services', [])
         
         var promise = $http(config)
         .then(function (response) {
-            //console.log(response);
+            return response.data;
+        });
+        return promise;
+    };
+    
+    this.toggleChannel = function(channelId, checked) {
+        var config = {
+            method: 'POST',
+            url: serviceConfig.urlbase + '/clipping/subscriptions',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            params: { 
+                channelId: channelId,
+                checked: checked
+            }
+        };
+        
+        var promise = $http(config)
+        .then(function (response) {
             return response.data;
         });
         return promise;

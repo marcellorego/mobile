@@ -10,3 +10,11 @@
 .col{
     padding: 0px;
 }
+
+.bar-search {
+    height: 49px;
+}
+
+.button-right {
+    float: right;    
+}

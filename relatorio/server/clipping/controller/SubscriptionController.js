@@ -5,33 +5,46 @@ var util = rootRequire('util/index');
 
 module.exports = function (router, route, wagner) {
 
-    var projection = {"_id":true,"channelId":true,"userId":true,"subscription_date":true};
+    var projection = {"_id":false,"channelId":true,"subscription_date":true};
     
     router.route(route)
     
-    .get(wagner.invoke(function(Subscription) {
+    .get(wagner.invoke(function(Subscription, ObjectId) {
         return function(req, res, next) {
-            var query = req.query || {};
+            var query = { userId: new ObjectId('56a3f09352ba33a00c3cf4a6') };
             Subscription.model.find(query, projection, 
                 util.handleMany.bind(null, res, next)
             );
         }
     }))
     
-    /*.post(wagner.invoke(function(User) {
+    .post(wagner.invoke(function(Subscription, ObjectId) {
         return function(req,res,next) {
-            var user = User.model();
-            util.copyBodyData(user, req.body, copyFunction);
-            user.save(function(error, data) {
-                if (!error) {
-                    delete data.password;
-                }
-                util.handleOne(res, next, error, data);
-            });
+            var query = req.query || {};
+            if (query.channelId) {
+                if (query.checked == "true") {
+                    var subs = Subscription.model();
+                    subs.channelId = query.channelId;
+                    subs.userId = new ObjectId('56a3f09352ba33a00c3cf4a6');
+                    subs.save(function(error) {
+                        var data = {
+                             checked: true
+                        };
+                        util.handleOne(res, next, error, data);
+                    });
+                } else {
+                    Subscription.model.remove({channelId : query.channelId}, function(error) {
+                        var data = {
+                             checked: false 
+                        };
+                        util.handleOne(res, next, error, data);
+                    });
+                }                
+            }
         }
     }));
 
-    router.route(route + "/:id")
+    /*router.route(route + "/:id")
     
     .get(wagner.invoke(function(User) {
         return function(req, res, next) {

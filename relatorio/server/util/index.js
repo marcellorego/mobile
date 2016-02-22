@@ -13,9 +13,9 @@ module.exports = {
     handleMany: handleMany
 }
 
-function copyBodyData(model, body, copyFunctions) {
+function copyBodyData(body, model, copyFunctions) {
     for (var prop in body) {
-        if (body[prop] !== undefined) {
+        if (body[prop] !== undefined && model.hasOwnProperty(prop)) {
             if (copyFunctions && copyFunctions.hasOwnProperty(prop)) {
                 var fn = copyFunctions[prop];
                 model[prop] = fn(body[prop]);

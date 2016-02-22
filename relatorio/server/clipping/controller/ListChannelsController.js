@@ -13,31 +13,17 @@ module.exports = function (router, route, wagner) {
             var channelName = req.query.name || '';
             var pageToken = req.query.pageToken;
             
-            ApiService.listChannels(channelName, pageToken, function(error, results) {
-                
+            ApiService.listChannels(channelName, pageToken, function(error, youtube) {
                 if (!error) {
+                    var query = { userId: new ObjectId('56a3f09352ba33a00c3cf4a6') };
                    
-                    //var query = { userId: new ObjectId('56a3f09352ba33a00c3cf4a6') };
-                   
-                    Subscription.model.find({}, {'channelId':true, '_id':false}, 
-                    function (err, Subs) {
+                    Subscription.model.find(query, {'channelId':true, '_id':false}, function (error, channels) {
                         
-                        if (err) return util.handleError(res, err);
+                        if (error) return util.handleError(res, error);
                         
-                        var element, item;
-                        for(var i in Subs) {
-                            element = Subs[i];
-                            for (var j in results.items) {
-                                item = results.items[j];
-                                if (item.id.channelId == element.channelId) {
-                                    item.checked = true;
-                                } else {
-                                    item.checked = false;
-                                }
-                            }
-                        }
+                        mergeItems(youtube.items, channels);
                         
-                        util.handleMany(res, next, error, results);         
+                        util.handleMany(res, next, error, youtube);         
                     });
                     
                 } else {
@@ -46,4 +32,19 @@ module.exports = function (router, route, wagner) {
             });
         }
     }))
-};
+}
+
+function mergeItems(col1, col2) {
+    
+    var element1, element2;
+    for(var pos1 in col1) {
+        element1 = col1[pos1];
+        element1.checked = false;
+        for (var pos2 in col2) {
+            element2 = col2[pos2];
+            if (element2.channelId == element1.id.channelId) {
+                element1.checked = true;
+            }
+        }
+    }
+}

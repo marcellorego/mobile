@@ -36,7 +36,7 @@ module.exports = function (router, route, wagner) {
     .post(wagner.invoke(function(User) {
         return function(req,res,next) {
             var user = User.model();
-            util.copyBodyData(user, req.body, copyFunction);
+            util.copyBodyData(req.body, user, copyFunction);
             user.save(function(error, data) {
                 if (!error) {
                     delete data.password;
@@ -64,7 +64,7 @@ module.exports = function (router, route, wagner) {
                 if(error) {
                     util.handleError(res, error);
                 } else {
-                    util.copyBodyData(data, req.body, copyFunction);
+                    util.copyBodyData(req.body, data, copyFunction);
                     // save the data
                     data.save(function(error, data) {
                         if (!error) {

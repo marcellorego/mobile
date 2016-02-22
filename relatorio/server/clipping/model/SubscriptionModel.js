@@ -20,6 +20,7 @@ var definition = {
 var schemaName = 'Subscription';
 var collectionName = 'subscriptions';
 var schema = new mongoose.Schema(definition);
+schema.index({ channelId: 1, userId: 1 }, { unique: true });
 
 module.exports.schemaName = schemaName;
 module.exports.collectionName = collectionName;

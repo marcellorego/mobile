@@ -5,47 +5,46 @@
       <h1 class="title">Search for new channels</h1>
   </ion-header-bar>
   
-  <ion-header-bar class="bar-subheader">
+  <ion-header-bar class="bar-subheader bar-search">
      <div class="bar bar-header item-input-inset">
         <label class="item-input-wrapper">
             <i class="icon ion-ios-search placeholder-icon"></i>
             <input type="search" class="input-stretch" placeholder="Channel name" 
-                ng-enter="doSearch()"
+                data-ng-enter="doSearch()"
                 data-ng-model="searchInput">
-            <button data-ng-show="searchInput && searchInput.length" 
+            <button id="clearSearch" data-ng-if="searchInput && searchInput.length" 
                 class="button button-clear ion-ios-close-empty"
-                data-ng-activated="doClear()"></button>
+                data-ng-click="doClearSearch()"></button>
         </label>
-        <button class="button" data-ng-click="doSearch()">Search</button>
+        <button id="search" class="button" data-ng-click="doSearch()">Search</button>
       </div>
-      
   </ion-header-bar>
   
   <ion-content class="has-header padding">
       
-      <div class="list card" ng-repeat="channel in channels track by $index">
+      <div class="list card" data-ng-repeat="channel in channels track by $index">
 	    
          <div class="item">
             <div class="row">
                 <div class="col col-90">
                     <div class="item-avatar">
-                	    <img ng-src="{{channel.snippet.thumbnails.default.url}}">
+                	    <img data-ng-src="{{channel.snippet.thumbnails.default.url}}">
                         <h2>{{channel.snippet.title}}</h2>
                         <p>Publicado em : {{channel.snippet.publishedAt | date:'dd/MM/yyyy'}}</p>
                     </div>
                 </div>
                 <div class="col">
-
                     <div class="item-toggle">
                         <label class="toggle toggle-balance">
                             <input type="checkbox"
-                                ng-model="channel.checked" 
-                                ng-change="toggleChannel(channel.id.channelId, channel.checked)">
+                                data-ng-model="channel.checked"
+                                data-ng-change="toggleChannel(channel)">
                             <div class="track">
                                 <div class="handle"></div>
                             </div>
                         </label>
                     </div>
+                    <p>{{channel.message}}</p>
                 </div>
             </div>
              <div class="item-text-wrap">
@@ -54,23 +53,28 @@
          </div>
       </div>
 
-      <!--div ng-if="channels !== undefined && !channels.length" class="no-results">
+      <div data-ng-if="channels !== undefined && !channels.length" class="no-results">
         <p>No Results</p>
-      </div-->
+      </div>
       
   </ion-content>
   
-  <!--ion-footer-bar ng-if="channels && channels.length">
-      <div class="item">
-        <button class="item-icon-left button-clear" data-ng-click="doPreviousPage()">
-            <i class="icon ion-arrow-left-b"></i>
-        </button>
-        
-        <button class="item-icon-right button-clear" 
-            ng-if="nextPageToken != ''"
-            data-ng-click="doNextPage()">
-            <i class="icon ion-arrow-right-b"></i>
-        </button>
+  <ion-footer-bar data-ng-if="channels && channels.length">
+      <div class="row">
+        <div class="col col-50">
+            <button class="button-clear"
+                data-ng-if="prevPageToken.length > 0"
+                data-ng-click="doPreviousPage()">
+                <i class="icon ion-arrow-left-b"></i>
+            </button>
+        </div>
+        <div class="col col-50">
+            <button class="button-right button-clear"
+                data-ng-if="nextPageToken.length > 0"
+                data-ng-click="doNextPage()">
+                <i class="icon ion-arrow-right-b"></i>
+            </button>
+        </div>
       </div>
-  </ion-footer-bar-->
+  </ion-footer-bar>
 </ion-view>
