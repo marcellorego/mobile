@@ -18,3 +18,7 @@
 .button-right {
     float: right;    
 }
+
+.content-center {
+    text-align : center;
+}

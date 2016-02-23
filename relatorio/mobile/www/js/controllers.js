@@ -38,13 +38,15 @@ angular.module('starter.controllers', ['ngCordova', 'ngCordovaOauth', 'starter.s
 
 .controller('SearchChannelCtrl', ['$scope', '$state', 'YoutubeService', function($scope, $state, YoutubeService) {
     
-    var performSearch = function(searchInput, pageToken) {
+    var performSearch = function(searchInput, pageToken, inc) {
         
         YoutubeService.listChannels(searchInput, pageToken)
         .then(function(data) {
             $scope.channels = data.items;
             $scope.prevPageToken = data.prevPageToken;
             $scope.nextPageToken = data.nextPageToken;
+            $scope.currentPage += inc;
+            $scope.totalPages = Math.ceil(data.pageInfo.totalResults / data.pageInfo.resultsPerPage);
         });
     };
     
@@ -61,19 +63,24 @@ angular.module('starter.controllers', ['ngCordova', 'ngCordovaOauth', 'starter.s
         $scope.searchInput = '';
         $scope.nextPageToken = undefined;
         $scope.prevPageToken = undefined;
+        $scope.currentPage = 0;
+        $scope.totalPages = 0;
+        $scope.channels = [];
     };
     
     $scope.doSearch = function() {
         var query = $scope.searchInput;
-        performSearch(query);
+        $scope.currentPage = 0;
+        $scope.totalPages = 0;
+        performSearch(query, null, 1);
     };
 
     $scope.doPreviousPage = function() {
-        performSearch($scope.searchInput, $scope.prevPageToken);
+        performSearch($scope.searchInput, $scope.prevPageToken, -1);
     }
     
     $scope.doNextPage = function() {
-        performSearch($scope.searchInput, $scope.nextPageToken);
+        performSearch($scope.searchInput, $scope.nextPageToken, 1);
     };
 
     $scope.toggleChannel = function(channel) {
@@ -81,6 +88,5 @@ angular.module('starter.controllers', ['ngCordova', 'ngCordovaOauth', 'starter.s
     };
 
     $scope.doClearSearch();
-    $scope.channels = [];
 }])
 ;

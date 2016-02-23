@@ -6,18 +6,18 @@
   </ion-header-bar>
   
   <ion-header-bar class="bar-subheader bar-search">
-     <div class="bar bar-header item-input-inset">
-        <label class="item-input-wrapper">
-            <i class="icon ion-ios-search placeholder-icon"></i>
-            <input type="search" class="input-stretch" placeholder="Channel name" 
-                data-ng-enter="doSearch()"
-                data-ng-model="searchInput">
-            <button id="clearSearch" data-ng-if="searchInput && searchInput.length" 
-                class="button button-clear ion-ios-close-empty"
-                data-ng-click="doClearSearch()"></button>
-        </label>
-        <button id="search" class="button" data-ng-click="doSearch()">Search</button>
-      </div>
+        <div class="bar bar-header item-input-inset">
+            <div class="item-input-wrapper">
+                <i class="icon ion-ios-search placeholder-icon"></i>
+                <input type="search" class="input-stretch" placeholder="Channel name" 
+                    data-ng-enter="doSearch()"
+                    data-ng-model="searchInput">
+                <button id="clearSearch" data-ng-if="(searchInput && searchInput.length) || (channels && channels.length)"
+                    class="button button-clear ion-ios-close-empty"
+                    data-ng-click="doClearSearch()"></button>
+            </div>
+            <button id="search" class="button" data-ng-click="doSearch()">Search</button>
+        </div>
   </ion-header-bar>
   
   <ion-content class="has-header padding">
@@ -53,7 +53,7 @@
          </div>
       </div>
 
-      <div data-ng-if="channels !== undefined && !channels.length" class="no-results">
+      <div data-ng-if="(channels !== undefined && !channels.length)" class="no-results content-center">
         <p>No Results</p>
       </div>
       
@@ -61,14 +61,17 @@
   
   <ion-footer-bar data-ng-if="channels && channels.length">
       <div class="row">
-        <div class="col col-50">
+        <div class="col col-33">
             <button class="button-clear"
                 data-ng-if="prevPageToken.length > 0"
                 data-ng-click="doPreviousPage()">
                 <i class="icon ion-arrow-left-b"></i>
             </button>
         </div>
-        <div class="col col-50">
+        <div class="col col-33 content-center" style="padding-top : 25%">
+            <labeld style="width : 50%" data-ng-if="currentPage">{{currentPage}} / {{totalPages}}</label>
+        </div>
+        <div class="col col-33">
             <button class="button-right button-clear"
                 data-ng-if="nextPageToken.length > 0"
                 data-ng-click="doNextPage()">
